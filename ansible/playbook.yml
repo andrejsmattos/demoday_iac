@@ -1,0 +1,68 @@
+---
+- name: Deploy DemoDay Frontend
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Atualizar todos os pacotes
+      dnf:
+        name: '*'
+        state: latest
+
+    - name: Instalar Git e dependências
+      dnf:
+        name:
+          - git
+          - tar
+          - gzip
+        state: present
+
+    - name: Instalar Node.js 20 via NodeSource
+      shell: |
+        curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+        dnf install -y nodejs
+      args:
+        creates: /usr/bin/node
+
+    - name: Instalar pnpm globalmente
+      npm:
+        name: pnpm
+        global: yes
+
+    - name: Instalar PM2 globalmente
+      npm:
+        name: pm2
+        global: yes
+
+    - name: Clonar repositório do DemoDay
+      git:
+        repo: 'https://github.com/YagoMaia/demoday_frontend.git'
+        dest: '/opt/demoday_frontend'
+        version: main
+        force: yes
+
+    - name: Instalar dependências do projeto
+      command: pnpm install
+      args:
+        chdir: /opt/demoday_frontend
+
+    - name: Build da aplicação Next.js
+      command: pnpm build
+      args:
+        chdir: /opt/demoday_frontend
+
+    - name: Parar instância anterior do PM2 (se existir)
+      shell: pm2 delete demoday-frontend
+      ignore_errors: true
+
+    - name: Iniciar aplicação com PM2
+      shell: pm2 start "pnpm start" --name demoday-frontend
+      args:
+        chdir: /opt/demoday_frontend
+
+    - name: Salvar configuração do PM2
+      shell: pm2 save
+
+    - name: Configurar PM2 para iniciar no boot
+      shell: pm2 startup | tail -1 | bash
+      ignore_errors: true

@@ -1,0 +1,13 @@
+# Chave privada SSH — NUNCA subir isso
+*.pem
+
+# Estado do Terraform — contém dados sensíveis
+terraform.tfstate
+terraform.tfstate.backup
+
+# Diretório de plugins do Terraform
+.terraform/
+.terraform.lock.hcl
+
+# Variáveis com dados sensíveis
+*.tfvars
