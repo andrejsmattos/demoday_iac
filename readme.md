@@ -42,6 +42,28 @@ iac/
     └── playbook.yml        # Instalação do ambiente e deploy do Next.js
 ```
 
+## Variáveis de Conexão EC2
+
+Após executar `terraform apply`, as seguintes variáveis serão geradas automaticamente:
+
+| Variável | Descrição | Exemplo |
+|----------|-----------|---------|
+| `EC2_HOST` | IP público da instância EC2 | `54.123.45.67` |
+| `EC2_USERNAME` | Usuário padrão para acesso SSH | `ec2-user` |
+| `EC2_SSH_KEY` | Caminho da chave privada SSH | `./keys/ec2-key.pem` |
+
+### Como acessar o servidor via SSH
+
+```bash
+ssh -i ./keys/ec2-key.pem ec2-user@<EC2_HOST>
+```
+
+### Exemplo com valores reais
+
+```bash
+ssh -i ./keys/ec2-key.pem ec2-user@54.123.45.67
+```
+
 ## Pré-requisitos
 
 - [Terraform](https://developer.hashicorp.com/terraform/downloads) instalado
