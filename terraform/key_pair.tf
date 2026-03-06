@@ -6,7 +6,7 @@ resource "tls_private_key" "rsa_key" {
 
 # Cria o Key Pair na AWS usando a chave pública gerada
 resource "aws_key_pair" "ec2_key_pair" {
-    key_name   = "ec2-instance-key" # Nome do key pair na AWS
+    key_name   = "demoday-cluster-key"
     public_key = tls_private_key.rsa_key.public_key_openssh
 }
 

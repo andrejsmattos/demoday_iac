@@ -1,27 +1,19 @@
-output "instance_public_ip" {
-  description = "IP público da instância EC2"
-  value       = aws_instance.web_server.public_ip
+output "frontend_ip" {
+  description = "IP Público da instância do Frontend"
+  value       = aws_instance.frontend_server.public_ip
 }
 
-output "website_url" {
-  description = "URL da aplicação Next.js"
-  value       = "http://${aws_instance.web_server.public_ip}:3000"
+output "backend_ip" {
+  description = "IP Público da instância do Backend"
+  value       = aws_instance.backend_server.public_ip
 }
 
-output "EC2_HOST" {
-  description = "IP do servidor EC2 para conexão"
-  value       = aws_instance.web_server.public_ip
-  sensitive   = false
+output "frontend_url" {
+  description = "Acesse o site aqui"
+  value       = "http://${aws_instance.frontend_server.public_ip}:3000"
 }
 
-output "EC2_USERNAME" {
-  description = "Usuário padrão do servidor EC2"
-  value       = var.ec2_username
-  sensitive   = false
-}
-
-output "EC2_SSH_KEY" {
-  description = "Caminho da chave privada SSH para acessar o servidor"
-  value       = "${path.module}/keys/${aws_key_pair.ec2_key_pair.key_name}.pem"
-  sensitive   = true
+output "backend_docs_url" {
+  description = "Acesse o Swagger da API aqui"
+  value       = "http://${aws_instance.backend_server.public_ip}:8000/docs"
 }
